@@ -6,8 +6,15 @@ Takes in a birthday and converts it to a zodiac sign
 Uses the zodiac sign and the current date to get a horoscope from the openai api
 """
 
+import os
+import openai
 import datetime
+
 from dateutil.parser import parse
+from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def get_zodiac_sign(birthday):
     zodiac_sign = ""
@@ -44,5 +51,11 @@ def get_zodiac_sign(birthday):
 # get birthday (day/month/year)
 birthday = input("Enter your birthday (DD/MM/YYYY): ")
 birthday = parse(birthday, dayfirst=True)
-print("You are a " + get_zodiac_sign(birthday) + ".")
+zoidiac_sign = get_zodiac_sign(birthday)
 
+# get current date
+current_date = datetime.datetime.now()
+
+# get horoscope
+prompt = "You are a " + zoidiac_sign + ".\n\n" + "Today is " + current_date.strftime("%A") + ", " + current_date.strftime("%B") + " " + current_date.strftime("%d") + ", " + current_date.strftime("%Y") + ".\n\n" + "Your horoscope for today is:"
+print(prompt)
