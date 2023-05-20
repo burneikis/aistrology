@@ -40,15 +40,10 @@ def get_zodiac_sign(birthday):
     
     return zodiac_sign
 
-# get name
 name = input("Enter your name: ")
-
-# get birthday (day/month/year)
 birthday = input("Enter your birthday (DD/MM/YYYY): ")
 birthday = parse(birthday, dayfirst=True)
 zoidiac_sign = get_zodiac_sign(birthday)
-
-# get current date
 current_date = datetime.datetime.now()
 
 response = openai.ChatCompletion.create(
