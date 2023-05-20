@@ -1,9 +1,8 @@
 """
 A program that uses openai api to give astrology readings from the command line
 
-Takes in a birthday and converts it to a zodiac sign
-
-Uses the zodiac sign and the current date to get a horoscope from the openai api
+Takes in a birthday and name and converts it to a zodiac sign
+Uses the zodiac sign and the current date to get a horoscope from the openai api using gpt-3.5-turbo
 """
 
 import os
@@ -11,9 +10,9 @@ import openai
 import datetime
 
 from dateutil.parser import parse
-from flask import Flask, render_template, request, redirect, url_for
+from dotenv import load_dotenv
 
-app = Flask(__name__)
+load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def get_zodiac_sign(birthday):
@@ -48,6 +47,9 @@ def get_zodiac_sign(birthday):
     
     return zodiac_sign
 
+# get name
+name = input("Enter your name: ")
+
 # get birthday (day/month/year)
 birthday = input("Enter your birthday (DD/MM/YYYY): ")
 birthday = parse(birthday, dayfirst=True)
@@ -56,6 +58,13 @@ zoidiac_sign = get_zodiac_sign(birthday)
 # get current date
 current_date = datetime.datetime.now()
 
-# get horoscope
-prompt = "You are a " + zoidiac_sign + ".\n\n" + "Today is " + current_date.strftime("%A") + ", " + current_date.strftime("%B") + " " + current_date.strftime("%d") + ", " + current_date.strftime("%Y") + ".\n\n" + "Your horoscope for today is:"
-print(prompt)
+response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are an astrologer. The date is " + current_date.strftime("%d/%m/%Y") + "." + " The user's name is " + name + "."},
+        {"role": "user", "content": "What is my horoscope for today, I'm a " + zoidiac_sign + "Born on " + birthday.strftime("%d/%m/%Y") + "."},
+    ],
+    max_tokens=150
+)
+
+print(response.choices[0].message.content)
