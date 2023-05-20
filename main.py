@@ -1,10 +1,3 @@
-"""
-A program that uses openai api to give astrology readings from the command line
-
-Takes in a birthday and name and converts it to a zodiac sign
-Uses the zodiac sign and the current date to get a horoscope from the openai api using gpt-3.5-turbo
-"""
-
 import os
 import openai
 import datetime
