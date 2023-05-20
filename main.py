@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+# Helps ai to not fuck up, and makes it more convincing
 def get_zodiac_sign(birthday):
     zodiac_sign = ""
     month = birthday.month
